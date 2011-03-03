@@ -1,0 +1,21 @@
+diff -Naur miniupnpc-1.4.20100202.orig/Makefile miniupnpc-1.4.20100202/Makefile
+--- miniupnpc-1.4.20100202.orig/Makefile	2010-02-02 19:39:52.000000000 +0100
++++ miniupnpc-1.4.20100202/Makefile	2010-02-12 11:13:08.000000000 +0100
+@@ -8,7 +8,7 @@
+ # $ INSTALLPREFIX=/usr/local make install
+ # or 
+ # make install (will go to /usr/bin, /usr/lib, etc...)
+-OS = $(shell uname -s)
++OS ?= $(shell uname -s)
+ CC ?= gcc
+ #AR = gar
+ #CFLAGS = -O -Wall -g -DDEBUG
+@@ -86,7 +86,7 @@
+ 
+ .PHONY:	install clean depend all installpythonmodule
+ 
+-all:	validateminixml $(LIBRARY) $(EXECUTABLES)
++all:	$(LIBRARY) $(EXECUTABLES)
+ 
+ pythonmodule:	$(LIBRARY) miniupnpcmodule.c setup.py
+ 	python setup.py build

@@ -1,0 +1,4 @@
+#!/bin/sh
+if [[ $1 == install || $1 == upgrade ]]; then
+    /usr/bin/apt-key add /usr/share/keyrings/sid77.slackware.it-keyring.gpg
+fi

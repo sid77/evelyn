@@ -1,0 +1,175 @@
+diff -Naur torsocks-201006201219.orig/src/tsocks.c torsocks-201006201219/src/tsocks.c
+--- torsocks-201006201219.orig/src/tsocks.c	2010-07-06 10:37:06.000000000 +0200
++++ torsocks-201006201219/src/tsocks.c	2010-07-07 10:43:40.770849533 +0200
+@@ -60,7 +60,8 @@
+      is always on (the _DARWIN_FEATURE_UNIX_CONFORMANCE macro will also be defined to the SUS conformance
+      level).  Defining _NONSTD_SOURCE will cause a compilation error.
+ */
+-#if !defined(__LP64__)
++/*Don't set _NONSTD_SOURCE when building for iPhoneOS*/
++#if !defined(__LP64__) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ #define _NONSTD_SOURCE 1
+ #endif
+ #include <sys/socket.h>
+@@ -117,7 +118,7 @@
+ static struct hostent *(*realgetipnodebyname)(GETIPNODEBYNAME_SIGNATURE);
+ static ssize_t (*realsendto)(SENDTO_SIGNATURE);
+ static ssize_t (*realsendmsg)(SENDMSG_SIGNATURE);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ static ssize_t (*realsendto_unix2003)(SENDTO_SIGNATURE);
+ static ssize_t (*realsendto_nocancel)(SENDTO_SIGNATURE);
+ static ssize_t (*realsendmsg_unix2003)(SENDMSG_SIGNATURE);
+@@ -129,7 +130,7 @@
+ static int (*realpoll)(POLL_SIGNATURE);
+ int (*realclose)(CLOSE_SIGNATURE);
+ static int (*realgetpeername)(GETPEERNAME_SIGNATURE);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ static int (*realconnect_unix2003)(CONNECT_SIGNATURE);
+ static int (*realconnect_nocancel)(CONNECT_SIGNATURE);
+ static int (*realselect_darwinextsn)(SELECT_SIGNATURE);
+@@ -156,7 +157,7 @@
+ int poll(POLL_SIGNATURE);
+ int close(CLOSE_SIGNATURE);
+ int getpeername(GETPEERNAME_SIGNATURE);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ int connect_unix2003(CONNECT_SIGNATURE) __asm("_connect$UNIX2003");
+ int connect_nocancel(CONNECT_SIGNATURE) __asm("_connect$NOCANCEL$UNIX2003");
+ int select_darwinextsn(SELECT_SIGNATURE) __asm("_select$DARWIN_EXTSN");
+@@ -184,7 +185,7 @@
+ struct hostent *getipnodebyname(GETIPNODEBYNAME_SIGNATURE);
+ ssize_t sendto(SENDTO_SIGNATURE);
+ ssize_t sendmsg(SENDMSG_SIGNATURE);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ ssize_t sendto_unix2003(SENDTO_SIGNATURE) __asm("_sendto$UNIX2003");
+ ssize_t sendto_nocancel(SENDTO_SIGNATURE) __asm("_sendto$NOCANCEL$UNIX2003");
+ ssize_t sendmsg_unix2003(SENDMSG_SIGNATURE) __asm("_sendmsg$UNIX2003");
+@@ -269,7 +270,7 @@
+ #ifndef USE_OLD_DLSYM
+     if ((realconnect = dlsym(RTLD_NEXT, "connect")) == NULL)
+       LOAD_ERROR("connect", MSGERR);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+     if ((realconnect_unix2003 = dlsym(RTLD_NEXT, "connect$UNIX2003")) == NULL)
+       LOAD_ERROR("connect$UNIX2003", MSGERR);
+     if ((realconnect_nocancel = dlsym(RTLD_NEXT, "connect$NOCANCEL$UNIX2003")) == NULL)
+@@ -278,7 +279,7 @@
+ 
+     if ((realselect = dlsym(RTLD_NEXT, "select")) == NULL)
+       LOAD_ERROR("select", MSGERR);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+     if ((realselect_darwinextsn = dlsym(RTLD_NEXT, "select$DARWIN_EXTSN")) == NULL)
+       LOAD_ERROR("select$DARWIN_EXTSN", MSGERR);
+     if ((realselect_darwinextsn_nocancel = dlsym(RTLD_NEXT, "select$DARWIN_EXTSN$NOCANCEL")) == NULL)
+@@ -291,7 +292,7 @@
+ 
+     if ((realpoll = dlsym(RTLD_NEXT, "poll")) == NULL)
+       LOAD_ERROR("poll", MSGERR);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+     if ((realpoll_unix2003 = dlsym(RTLD_NEXT, "poll$UNIX2003")) == NULL)
+       LOAD_ERROR("poll$UNIX2003", MSGERR);
+     if ((realpoll_nocancel = dlsym(RTLD_NEXT, "poll$NOCANCEL$UNIX2003")) == NULL)
+@@ -300,7 +301,7 @@
+ 
+     if ((realclose = dlsym(RTLD_NEXT, "close")) == NULL)
+       LOAD_ERROR("close", MSGERR);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+     if ((realclose_unix2003 = dlsym(RTLD_NEXT, "close$UNIX2003")) == NULL)
+       LOAD_ERROR("close$UNIX2003", MSGERR);
+     if ((realclose_nocancel = dlsym(RTLD_NEXT, "close$NOCANCEL$UNIX2003")) == NULL)
+@@ -309,7 +310,7 @@
+ 
+     if ((realgetpeername = dlsym(RTLD_NEXT, "getpeername")) == NULL)
+       LOAD_ERROR("getpeername", MSGERR);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+     if ((realgetpeername_unix2003 = dlsym(RTLD_NEXT, "getpeername$UNIX2003")) == NULL)
+       LOAD_ERROR("getpeername$UNIX2003", MSGERR);
+ #endif
+@@ -340,7 +341,7 @@
+ 
+     if ((realsendto = dlsym(RTLD_NEXT, "sendto")) == NULL)
+       LOAD_ERROR("sendto", MSGERR);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+     if ((realsendto_unix2003 = dlsym(RTLD_NEXT, "sendto$UNIX2003")) == NULL)
+       LOAD_ERROR("sendto$UNIX2003", MSGERR);
+     if ((realsendto_nocancel = dlsym(RTLD_NEXT, "sendto$NOCANCEL$UNIX2003")) == NULL)
+@@ -349,7 +350,7 @@
+ 
+     if ((realsendmsg = dlsym(RTLD_NEXT, "sendmsg")) == NULL)
+       LOAD_ERROR("sendmsg", MSGERR);
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+     if ((realsendmsg_unix2003 = dlsym(RTLD_NEXT, "sendmsg$UNIX2003")) == NULL)
+       LOAD_ERROR("sendmsg$UNIX2003", MSGERR);
+     if ((realsendmsg_nocancel = dlsym(RTLD_NEXT, "sendmsg$NOCANCEL$UNIX2003")) == NULL)
+@@ -453,7 +454,7 @@
+     return tsocks_connect_guts(__fd, __addr, __len, real ## funcname); \
+   }
+ PATCH_CONNECT(connect, "connect")
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ PATCH_CONNECT(connect_unix2003, "conncect$UNIX2003")
+ PATCH_CONNECT(connect_nocancel, "conncect$NOCANCEL$UNIX2003")
+ #endif
+@@ -468,7 +469,7 @@
+     return tsocks_close_guts(fd, real ## funcname); \
+   }
+ PATCH_CLOSE(close, "close")
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ PATCH_CLOSE(close_unix2003, "close$UNIX2003")
+ PATCH_CLOSE(close_nocancel, "close$NOCANCEL$UNIX2003")
+ #endif
+@@ -483,7 +484,7 @@
+     return tsocks_select_guts(n, readfds, writefds, exceptfds, timeout, real ## funcname); \
+   }
+ PATCH_SELECT(select, "select")
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ PATCH_SELECT(select_darwinextsn, "select$DARWIN_EXTSN")
+ PATCH_SELECT(select_darwinextsn_nocancel, "select$DARWIN_EXTSN$NOCANCEL")
+ PATCH_SELECT(select_unix2003, "select$UNIX2003")
+@@ -500,7 +501,7 @@
+     return tsocks_poll_guts(ufds, nfds, timeout, real ## funcname); \
+   }
+ PATCH_POLL(poll, "poll")
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ PATCH_POLL(poll_unix2003, "poll$UNIX2003")
+ PATCH_POLL(poll_nocancel, "poll$NOCANCEL$UNIX2003")
+ #endif
+@@ -515,7 +516,7 @@
+     return tsocks_getpeername_guts(__fd, __name, __namelen, real ## funcname); \
+   }
+ PATCH_GETPEERNAME(getpeername, "getpeername")
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ PATCH_GETPEERNAME(getpeername_unix2003, "getpeername$UNIX2003")
+ #endif
+ 
+@@ -529,7 +530,7 @@
+     return tsocks_sendto_guts(s, buf, len, flags, to, tolen, real ## funcname); \
+   }
+ PATCH_SENDTO(sendto, "sendto")
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ PATCH_SENDTO(sendto_unix2003, "sendto$UNIX2003")
+ PATCH_SENDTO(sendto_nocancel, "sendto$NOCANCEL$UNIX2003")
+ #endif
+@@ -544,7 +545,7 @@
+     return tsocks_sendmsg_guts(s, msg, flags, real ## funcname); \
+   }
+ PATCH_SENDMSG(sendmsg, "sendmsg")
+-#if defined(__APPLE__) || defined(__darwin__)
++#if (defined(__APPLE__) || defined(__darwin__)) && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+ PATCH_SENDMSG(sendmsg_unix2003, "sendmsg$UNIX2003")
+ PATCH_SENDMSG(sendmsg_nocancel, "sendmsg$NOCANCEL$UNIX2003")
+ #endif

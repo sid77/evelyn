@@ -1,0 +1,3 @@
+#!/bin/bash
+/bin/launchctl load -w /System/Library/LaunchDaemons/com.bigboss.sbsettingsd.plist
+exit 0

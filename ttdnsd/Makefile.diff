@@ -1,0 +1,48 @@
+diff -Naur ttdnsd-0.7.orig/Makefile ttdnsd-0.7/Makefile
+--- ttdnsd-0.7.orig/Makefile	2010-07-07 09:49:24.000000000 +0200
++++ ttdnsd-0.7/Makefile	2010-07-07 12:38:16.765609087 +0200
+@@ -8,7 +8,7 @@
+ TORTSOCKSCONF = tor-tsocks.conf
+ MANPAGE = ttdnsd.1
+ INITSCRIPT = ttdnsd.init
+-TSOCKSLIB = tsocks
++TSOCKSLIB = torsocks
+ # If the program ever grows, we'll enjoy this macro:
+ SRCFILES := $(wildcard *.c)
+ OBJFILES := $(patsubst %.c,%.o,$(wildcard *.c))
+@@ -17,6 +17,8 @@
+ # Build host specific additionals.  Uncomment whatever matches your situation.
+ # For BSD's with pkgsrc:
+ #EXTRA_CFLAGS = -I /usr/pkg/include -L /usr/pkg/lib
++# Build against torsocks
++EXTRA_CFLAGS = -L/usr/lib/torsocks
+ 
+ # Hardening and warnings for building with gcc
+ GCCWARNINGS = -Wall -fno-strict-aliasing -W -Wfloat-equal -Wundef	\
+@@ -26,7 +28,7 @@
+ -Wnested-externs -Wbad-function-cast -Wswitch-enum -Winit-self		\
+ -Wmissing-field-initializers -Wdeclaration-after-statement		\
+ -Wold-style-definition -Waddress -Wmissing-noreturn -Wnormalized=id	\
+--Woverride-init -Wstrict-overflow=1 -Wextra -Warray-bounds		\
++-Woverride-init -Wstrict-overflow=1 -Wextra				\
+ -Wstack-protector -Wformat -Wformat-security -Wpointer-sign
+ GCCHARDENING=-D_FORTIFY_SOURCE=2 -fstack-protector-all -fwrapv -fPIE --param ssp-buffer-size=1
+ LDHARDENING=-pie -z relro -z now
+@@ -56,13 +58,13 @@
+ 	cp $(EXEC) $(DESTDIR)/usr/sbin/
+ 	test -d $(DESTDIR)/usr/share/man/man1/ || mkdir -p $(DESTDIR)/usr/share/man/man1/
+ 	cp $(MANPAGE) $(DESTDIR)/usr/share/man/man1/
+-	test -d $(DESTDIR)/etc/init.d/ || mkdir -p $(DESTDIR)/etc/init.d/
+-	cp $(INITSCRIPT) $(DESTDIR)/etc/init.d/ttdnsd
++#	test -d $(DESTDIR)/etc/init.d/ || mkdir -p $(DESTDIR)/etc/init.d/
++#	cp $(INITSCRIPT) $(DESTDIR)/etc/init.d/ttdnsd
+ 	test -d $(DESTDIR)/usr/share/doc/ttdnsd || mkdir -p \
+     $(DESTDIR)/usr/share/doc/ttdnsd/
+ 	cp -r sample-configurations $(DESTDIR)/usr/share/doc/ttdnsd/
+-	test -d $(DESTDIR)/etc/default/ || mkdir -p $(DESTDIR)/etc/default/
+-	cp ttdnsd.defaults $(DESTDIR)/etc/default/ttdnsd
++#	test -d $(DESTDIR)/etc/default/ || mkdir -p $(DESTDIR)/etc/default/
++#	cp ttdnsd.defaults $(DESTDIR)/etc/default/ttdnsd
+ 
+ uninstall: all
+ 	rm $(DESTDIR)/usr/sbin/$(EXEC)
