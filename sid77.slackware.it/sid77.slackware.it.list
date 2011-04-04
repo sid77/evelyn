@@ -3,4 +3,4 @@
 # either add your own .list file to /etc/apt/sources.list.d
 # or add your entry to the global /etc/apt/sources.list file
 
-deb http://sid77.slackware.it/iphone/ evelyn main
+deb http://sid77.slackware.it/ios/ evelyn main
