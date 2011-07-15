@@ -1,4 +1,11 @@
 #!/bin/sh
+
 if [[ $1 == install || $1 == upgrade ]]; then
-    /usr/bin/apt-key add /usr/share/keyrings/sid77.slackware.it-keyring.gpg
+  # Remove repo key from trusted.gpg if present
+  # (new location is /etc/apt/trusted.gpg.d/sid77.slackware.it.gpg)
+  /usr/bin/apt-key --keyring /etc/apt/trusted.gpg list | grep 6295C2FE
+  PRESENT=$?
+  if [ $PRESENT -eq 0 ]; then
+    /usr/bin/apt-key --keyring /etc/apt/trusted.gpg del 6295C2FE
+  fi
 fi
