@@ -8,4 +8,6 @@ if [[ $1 == install || $1 == upgrade ]]; then
   if [ $PRESENT -eq 0 ]; then
     /usr/bin/apt-key --keyring /etc/apt/trusted.gpg del 6295C2FE
   fi
+  # Remove /Applications/Cydia.app/Sources/sid77.slackware.it.png if present
+  /bin/rm -f /Applications/Cydia.app/Sources/sid77.slackware.it.png
 fi
