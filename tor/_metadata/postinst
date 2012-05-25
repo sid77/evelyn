@@ -1,0 +1,5 @@
+#!/bin/bash
+# add system user _tor, if missing
+# fix permissions on /var/lib/tor
+chown -R _tor:_tor /var/lib/tor
+exit 0
