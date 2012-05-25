@@ -1,4 +1,3 @@
-/var/mobile/Library/MobileTor/polipo.conf
+/var/mobile/Library/MobileTor/pf.conf
 /var/mobile/Library/MobileTor/torrc
 /System/Library/LaunchDaemons/it.slackware.sid77.tor.plist
-/System/Library/LaunchDaemons/it.slackware.sid77.polipo.plist
